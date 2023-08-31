@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<!-- Can be stylizeed soon -->
+<html>
+    <head>
+        <title>Loaded {{f.filename}}</title>
+    </head>
+    <body>
+        {% for table in database.tables.keys() %}
+            {% set x = database.tables[table] %}
+            <table style="border: 0.25em solid black; border-style: double;">
+                <caption>{{table}}</caption>
+                <tr>{% for column in x.columns.keys() %}
+                    {% set y = x.columns[column] %}
+                    <th>{{column}}</th>
+                {% endfor %}</tr>
+                
+                {% for id in range(database.ids_count(table)) %}
+                    <tr>
+                        {% set val = database.get(table, id) %}
+                        {% for key in val.keys() %}
+                            <td>{{val[key]}}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </table>
+            <br>
+        {% endfor %}
+    </body>
+</html>

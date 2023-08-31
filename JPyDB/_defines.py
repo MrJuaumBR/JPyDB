@@ -44,6 +44,10 @@ class Tables_():
 
         self.columns = {}
 
+    def ids_count(self) -> int:
+        x = len(self.columns[next(iter(self.columns))].values)
+        return x
+
     def add_column(self, name:str, type:type, null:bool):
         if not name in self.columns.keys():
             col = Columns_(name, type, null)
@@ -86,14 +90,26 @@ class Tables_():
         return g
 
 class Database_():
+    """Database Cursor and controller"""
     def __init__(self,filename:str) -> None:
-        self.filename=  "./"+str(filename)+".pydb"
+        self.CommonLoad = False
+        if not filename in ['',' ', None]:
+            self.CommonLoad = True
+            self.filename=  "./"+str(filename)+".pydb"
         self.tables = {}
 
         self.created_at = datetime.now().strftime(GSTRFTIME)
         self.updated_at = ""
 
-        self.startup()
+        if self.CommonLoad:
+            self.startup()
+
+    def ids_count(self, table_name:str) -> int:
+        if table_name in self.tables:
+            return self.tables[table_name].ids_count()
+        else:
+            print('Table not found!')
+            return 0
 
     def add_column(self, table_name:str,name:str, type:type, null:bool):
         if table_name in self.tables.keys():

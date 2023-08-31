@@ -1,6 +1,7 @@
 from ._defines import *
 
 class Handler_():
+    """Handler, load content and others"""
     def __init__(self,filename):
         self.database:Database_ = Database_(filename)
 

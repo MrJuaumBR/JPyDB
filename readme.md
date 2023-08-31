@@ -1,9 +1,23 @@
 # JPyDB
 
-MrJuaumBR == MrPotatoBR == MrJuaum == MrPotato
+**MrJuaumBR == MrPotatoBR == MrJuaum == MrPotato**
+
 *All  of  these  are the same people*
 
 
-** GitHub making me crazy, i re-attempted to upload this 5 times **
+# Prompts
+```shell
+# Local Update
+pip install . --upgrade
 
-Soon
+# Build Package
+python3 -m build
+
+```
+
+
+# Contacts
+
+[Discord](https://discord.gg/fb84sHDX7R)
+
+[YouTube](https://www.youtube.com/channel/UClcAmcdF0OvAOEgiKr5NgYQ)

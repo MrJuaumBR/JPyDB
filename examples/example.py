@@ -19,7 +19,10 @@ db.add_value('Users','Name',1,'B')
 db.add_value('Users','Age',1,27)
 
 # Get Stored Values
-dbh.get_content()
+dbh.get_content() # Print all values
+
+# Get Specific Stored Value
+print(db.get('Users',0)) # Print Specific ID Value
 
 # Save Values
 db.save()
