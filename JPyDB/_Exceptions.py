@@ -18,9 +18,9 @@ class NotExpectedReturn(Exception):
 """Args Error..."""
 
 class ValueTypeIncorrect(Exception):
-    def __init__(self, value_id:int) -> None:
-        super().__init__(value_id)
-        self.message=f'Value {value_id} Type is incorrect!'
+    def __init__(self, value_id:int, value) -> None:
+        super().__init__(value_id,value)
+        self.message=f'Value {value_id} Type is incorrect! Value Type: {type(value)}'
 
 class IncorrectSizeColumnsAndValues(Exception):
     def __init__(self, columns, values) -> None:

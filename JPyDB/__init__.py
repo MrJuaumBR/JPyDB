@@ -33,11 +33,24 @@ Thanks for all!
 
 
 
+# Define masked
+class Columns(Columns_):
+    def __init__(self, name: str, type: type, not_null: bool) -> Columns_:
+        super().__init__(name, type, not_null)
 
+class Tables(Tables_):
+    def __init__(self, table_name: str) -> Tables_:
+        super().__init__(table_name)
+
+class Database(Database_):
+    def __init__(self, filename: str) -> Database_:
+        super().__init__(filename)
+
+# Define Masked for Handler
 
 class pyDatabase(Handler_):
     """Main Startup"""
-    __VERSION__ = 0.4
+    __VERSION__ = 0.5
     def __init__(self, filename="") -> Handler_:
         """Initialize, filename='' to load after init"""
         super().__init__(filename)

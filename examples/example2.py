@@ -10,7 +10,6 @@ dbh = pyDatabase('database') # Load Handler and Database
 
 db = dbh.db() # Get Database cursor
 
-
 db.update_value('Users','Name',0,'User 1')
 print(db.get('Users',0))
 # Update for 0

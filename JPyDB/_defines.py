@@ -2,7 +2,7 @@ import pickle
 import base64
 import os
 
-GSTRFTIME = "%d/%m/%Y %H:%I"
+GSTRFTIME = "%d/%m/%Y %H:%I:%S"
 from datetime import datetime
 
 from ._Exceptions import (TableNotFound, ColumnNotFound, ValueTypeIncorrect, IncorrectSizeColumnsAndValues, NotExpectedReturn)
@@ -15,12 +15,14 @@ class Columns_():
 
         self.values = {}
 
-    def add_value(self,id:any, value:any):
+    def add_value(self,id:any=None, value:any=None):
+        if id in [None,"None"," "]:
+            id = len(self.values.keys())
         if not str(id) in self.values.keys():
             if type(value) == self.type:
                 self.values[str(id)] = value
             else:
-                raise(ValueTypeIncorrect(str(id)))
+                raise(ValueTypeIncorrect(str(id),value))
         else:
             print(f'Value: {id}, Already in Column')
 
@@ -50,6 +52,18 @@ class Tables_():
         x = len(self.columns[next(iter(self.columns))].values)
         return x
 
+    def get_all(self) -> list:
+        l = []
+        for c,column in enumerate(self.columns.keys()):
+            for x,value in enumerate(self.columns[column].values.keys()):
+                if not self.get(value) in l:
+                    l.append(self.get(value))
+                if x >= self.ids_count():
+                    break
+            if c >= 0:
+                break
+        return l
+
     def add_column(self, column_name:str, type:type, null:bool=False):
         if not column_name in self.columns.keys():
             col = Columns_(column_name, type, null)
@@ -63,7 +77,7 @@ class Tables_():
         else:
             raise(ColumnNotFound(column_name))
 
-    def add_value(self, column_name:str, id:int, value:any):
+    def add_value(self, column_name:str, id:int=None, value:any=None):
         if column_name in self.columns.keys():
             col:Columns_ = self.columns[column_name]
             col.add_value(id, value)
@@ -127,6 +141,13 @@ class Database_():
         else:
             raise(TableNotFound(table_name))
 
+    def get_all(self, table_name) -> list:
+        if table_name in self.tables:
+            l = self.tables[table_name].get_all()
+        else:
+            raise(TableNotFound(table_name))
+        return l
+
     def get(self, table_name, id) -> any:
         """Get all values by id"""
         if table_name in self.tables.keys():
@@ -142,14 +163,14 @@ class Database_():
         else:
             raise(TableNotFound(table_name))
 
-    def add_value(self, table_name:str,column_name:str, id:int, value:any):
+    def add_value(self, table_name:str,column_name:str, id:int=None, value:any=None):
         """Add a value in a Table & Column"""
         if table_name in self.tables.keys():
             self.tables[table_name].add_value(column_name, id, value)
         else:
             raise(TableNotFound(table_name))
     
-    def add_values(self, table_name:str,columns:list or tuple,values:list or tuple,id:int):
+    def add_values(self, table_name:str,columns:list or tuple,values:list or tuple,id:int=None):
         """Add values for a id"""
         if table_name in self.tables.keys():
             if len(columns) == len(values):
@@ -191,12 +212,12 @@ class Database_():
 
     def save(self):
         """Save Values"""
-        open(self.filename,'wb').write(base64.b64encode(pickle.dumps(self)))
         self.updated_at = datetime.now().strftime(GSTRFTIME)
+        open(self.filename,'wb').write(base64.b64encode(pickle.dumps(self)))
 
     def loads(self) -> classmethod:
         """Get Stored Values"""
-        if open(self.filename,'r+'):
+        if not open(self.filename,'r+').read() in [' ','',None,"None"]:
             me = pickle.loads(base64.b64decode(open(self.filename,'rb').read()))
         else:
             me = self

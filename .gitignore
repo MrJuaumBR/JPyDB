@@ -1,5 +1,6 @@
 # Git ignore for JPyDB
 *.pydb
+*.pypirc
 
 
 # Byte-compiled / optimized / DLL files
