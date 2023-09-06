@@ -9,6 +9,12 @@ class ColumnNotFound(Exception):
         super().__init__(column_name)
         self.message=f'Column {column_name} Not Found!'
 
+"""Others error..."""
+class NotExpectedReturn(Exception):
+    def __init__(self,file_path) -> None:
+        super().__init__(file_path)
+        self.message=f'File: {file_path}, is expected a return, but not happened.'
+
 """Args Error..."""
 
 class ValueTypeIncorrect(Exception):

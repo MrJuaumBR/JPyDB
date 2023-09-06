@@ -1,1 +1,1 @@
-setuptools==65.5.0 # Only for setup
+# setuptools==65.5.0 # Only for setup == IGNORE

@@ -5,7 +5,7 @@ import os
 GSTRFTIME = "%d/%m/%Y %H:%I"
 from datetime import datetime
 
-from ._Exceptions import (TableNotFound, ColumnNotFound, ValueTypeIncorrect, IncorrectSizeColumnsAndValues)
+from ._Exceptions import (TableNotFound, ColumnNotFound, ValueTypeIncorrect, IncorrectSizeColumnsAndValues, NotExpectedReturn)
 
 class Columns_():
     def __init__(self,name:str, type:type, not_null:bool) -> None:
@@ -50,7 +50,7 @@ class Tables_():
         x = len(self.columns[next(iter(self.columns))].values)
         return x
 
-    def add_column(self, column_name:str, type:type, null:bool):
+    def add_column(self, column_name:str, type:type, null:bool=False):
         if not column_name in self.columns.keys():
             col = Columns_(column_name, type, null)
             self.columns[column_name] = col
@@ -174,11 +174,18 @@ class Database_():
         else:
             raise(TableNotFound(table_name))
 
-    def create_table(self, name):
+    def create_table(self, name, columns=()):
         """Create a table"""
         if not name in self.tables.keys():
             table = Tables_(str(name))
             self.tables[str(name)] = table
+            if columns and columns != ():
+                for column in columns:
+                    if len(column) == 3:
+                        not_null = column[2]
+                    else:
+                        not_null = False
+                    table.add_column(column[0],column[1],not_null)
         else:
             print(f'Table: {name}, Already in Database')
 
@@ -200,6 +207,7 @@ class Database_():
         if not os.path.exists(self.filename):
             open(self.filename,'w+')
             return False
-        else:
+        elif os.path.exists(self.filename):
             self.__dict__ = self.loads().__dict__
             return True
+        raise(NotExpectedReturn(__file__))

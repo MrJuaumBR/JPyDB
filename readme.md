@@ -15,6 +15,14 @@ python3 -m build
 
 ```
 
+# Our Lines
+*Inspired in SQL*
+
+*Made using: Base64 and pickle*
+
+*Used Only Python to this*
+
+*Join our [Discord](https://discord.gg/fb84sHDX7R) Server*
 
 # Contacts
 

@@ -4,5 +4,5 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name='JPyDB'
-version='0.3'
+version='0.4'
 description='A Database Mangager, this can storage multiples things'

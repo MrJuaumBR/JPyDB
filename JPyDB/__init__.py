@@ -37,7 +37,7 @@ Thanks for all!
 
 class pyDatabase(Handler_):
     """Main Startup"""
-    __VERSION__ = 0.3
+    __VERSION__ = 0.4
     def __init__(self, filename="") -> Handler_:
         """Initialize, filename='' to load after init"""
         super().__init__(filename)
