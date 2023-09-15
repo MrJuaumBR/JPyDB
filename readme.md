@@ -9,7 +9,7 @@
 ```shell
 pip install "git+https://github.com/MrJuaumBR/JPyDB" # Install from github
 
-pip install -i https://test.pypi.org/simple/ JPyDB==0.4 # Install from Test PyPi
+pip install -i https://test.pypi.org/simple/ JPyDB # Install from Test PyPi
 
 ```
 
@@ -25,7 +25,6 @@ py setup.py build
 py -m build
 
 # Send to TestPyPi
-python -m twine upload --repository PROJECT_NAME dist/*
 python -m twine upload --repository-url https://test.pypi.org/legacy/ dist/*
 
 ```

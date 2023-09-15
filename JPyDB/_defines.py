@@ -5,7 +5,7 @@ import os
 GSTRFTIME = "%d/%m/%Y %H:%I:%S"
 from datetime import datetime
 
-from ._Exceptions import (TableNotFound, ColumnNotFound, ValueTypeIncorrect, IncorrectSizeColumnsAndValues, NotExpectedReturn)
+from ._Exceptions import (TableNotFound, ColumnNotFound, ValueTypeIncorrect, IncorrectSizeColumnsAndValues, NotExpectedReturn, IdNotFound, IncorrectSizeColumns)
 
 class Columns_():
     def __init__(self,name:str, type:type, not_null:bool) -> None:
@@ -33,7 +33,13 @@ class Columns_():
             else:
                 raise(ValueTypeIncorrect(str(id)))
         else:
-            print(f'Value: {id}, Not Found in Column')
+            raise(IdNotFound(str(id)))
+
+    def delete_value(self, id:any):
+        if str(id) in self.values.keys():
+            del self.values[str(id)]
+        else:
+            raise(IdNotFound(str(id)))
 
     def get_value(self, id:any) -> any:
         if str(id) in self.values.keys():
@@ -41,7 +47,7 @@ class Columns_():
         else:
             print(f'Value: {id}, Not Found in Column')
             return None
-     
+
 class Tables_():
     def __init__(self,table_name:str) -> None:
         self.table_name = table_name
@@ -77,6 +83,20 @@ class Tables_():
         else:
             raise(ColumnNotFound(column_name))
 
+    def delete_value(self, column_name:str, id:int=None):
+        if column_name in self.columns.keys():
+            col:Columns_ = self.columns[column_name]
+            col.delete_value(id)
+        else:
+            raise(ColumnNotFound(column_name))
+
+    def delete_values(self, columns_names:list[str,], id:int=None):
+        if len(columns_names) <= len(self.columns.keys()):
+            for col in columns_names:
+                self.delete_value(col, id)
+        else:
+            raise(IncorrectSizeColumns(columns_names,self.columns))
+
     def add_value(self, column_name:str, id:int=None, value:any=None):
         if column_name in self.columns.keys():
             col:Columns_ = self.columns[column_name]
@@ -97,7 +117,7 @@ class Tables_():
         else:
             raise(ColumnNotFound(column_name))
 
-    def get(self, id) -> any:
+    def get(self, id) -> dict:
         g = {}
         for col in self.columns.keys():
             c:Columns_ = self.columns[col]
@@ -141,17 +161,17 @@ class Database_():
         else:
             raise(TableNotFound(table_name))
 
-    def get_all(self, table_name) -> list:
+    def get_all(self, table_name) -> list[dict,]:
         if table_name in self.tables:
             l = self.tables[table_name].get_all()
         else:
             raise(TableNotFound(table_name))
         return l
 
-    def get(self, table_name, id) -> any:
+    def get(self, table_name, id) -> dict:
         """Get all values by id"""
         if table_name in self.tables.keys():
-            x:Columns_ = self.tables[table_name]
+            x:Tables_ = self.tables[table_name]
             return x.get(id)
         else:
             raise(TableNotFound(table_name))
@@ -185,6 +205,24 @@ class Database_():
         """Update a value in a table & Column"""
         if table_name in self.tables.keys():
             self.tables[table_name].update_value(column_name, id, value)
+        else:
+            raise(TableNotFound(table_name))
+
+    def delete_values(self, table_name:str, id:int,columns:list[str,]=[]):
+        if self.tables[table_name]:
+            table:Tables_=self.tables[table_name]
+            if len(columns) <= 0:
+                columns = []
+                for col in table.columns.keys():
+                    columns.append(col)
+            table.delete_values(columns,id)
+        else:
+            raise(ColumnNotFound(table_name))
+
+    def delete_all(self, table_name:str):
+        if table_name in self.tables.keys():
+            for id in range(self.tables[table_name].ids_count()):
+                self.delete_values(table_name,id)
         else:
             raise(TableNotFound(table_name))
 

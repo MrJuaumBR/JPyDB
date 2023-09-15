@@ -32,7 +32,6 @@ Thanks for all!
 """
 
 
-
 # Define masked
 class Columns(Columns_):
     def __init__(self, name: str, type: type, not_null: bool) -> Columns_:
@@ -47,13 +46,15 @@ class Database(Database_):
         super().__init__(filename)
 
 # Define Masked for Handler
-
 class pyDatabase(Handler_):
     """Main Startup"""
-    __VERSION__ = 0.5
+    __VERSION__ = 0.6
     def __init__(self, filename="") -> Handler_:
         """Initialize, filename='' to load after init"""
         super().__init__(filename)
+
+    def TESTPYPI(self):
+        webbrowser.open("https://test.pypi.org/project/JPyDB/")
 
     def GITHUB(self):
         webbrowser.open("https://github.com/MrJuaumBR/JPyDB")

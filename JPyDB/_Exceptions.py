@@ -9,6 +9,11 @@ class ColumnNotFound(Exception):
         super().__init__(column_name)
         self.message=f'Column {column_name} Not Found!'
 
+class IdNotFound(Exception):
+    def __init__(self, id) -> None:
+        super().__init__(id)
+        self.message=f'Id: {id}, Not Found!'
+
 """Others error..."""
 class NotExpectedReturn(Exception):
     def __init__(self,file_path) -> None:
@@ -21,6 +26,11 @@ class ValueTypeIncorrect(Exception):
     def __init__(self, value_id:int, value) -> None:
         super().__init__(value_id,value)
         self.message=f'Value {value_id} Type is incorrect! Value Type: {type(value)}'
+
+class IncorrectSizeColumns(Exception):
+    def __init__(self, Columns:list[str,], ExColumns:dict) -> None:
+        super().__init__(Columns, ExColumns)
+        self.message=f'Columns: {len(Columns)}({Columns}), is more than {len(ExColumns.keys())}({ExColumns})'
 
 class IncorrectSizeColumnsAndValues(Exception):
     def __init__(self, columns, values) -> None:
