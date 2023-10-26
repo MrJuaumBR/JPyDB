@@ -1,11 +1,12 @@
 import pickle
 import base64
 import os
+from inspect import isclass
 
 GSTRFTIME = "%d/%m/%Y %H:%I:%S"
 from datetime import datetime
 
-from ._Exceptions import (TableNotFound, ColumnNotFound, ValueTypeIncorrect, IncorrectSizeColumnsAndValues, NotExpectedReturn, IdNotFound, IncorrectSizeColumns)
+from ._Exceptions import (TableNotFound, ColumnNotFound, IncorrectValueType, IncorrectSizeColumnsAndValues, NotExpectedReturn, IdNotFound, IncorrectSizeColumns, ClassDictGet, FileTypeNotExist)
 
 class Columns_():
     def __init__(self,name:str, type:type, not_null:bool) -> None:
@@ -15,14 +16,34 @@ class Columns_():
 
         self.values = {}
 
+    def findByText(self, text) -> int or str:
+        for key in self.values.keys():
+            if str(self.values[key]).lower() == str(text).lower():
+                return key
+        return None
+
     def add_value(self,id:any=None, value:any=None):
         if id in [None,"None"," "]:
             id = len(self.values.keys())
         if not str(id) in self.values.keys():
             if type(value) == self.type:
                 self.values[str(id)] = value
+            elif self.type == any:
+                if isclass(value):
+                    # Class or instance
+                    v = None
+                    try:
+                        v = value.__dict__
+                    except:
+                        v = None
+                    if v:
+                        self.values[str(id)] = v
+                    else:
+                        raise(ClassDictGet(str(type(value).__name__)))
+                else:
+                    self.values[str(id)] = value
             else:
-                raise(ValueTypeIncorrect(str(id),value))
+                raise(IncorrectValueType(str(id),value))
         else:
             print(f'Value: {id}, Already in Column')
 
@@ -31,7 +52,7 @@ class Columns_():
             if type(value) == self.type:
                 self.values[str(id)] = value
             else:
-                raise(ValueTypeIncorrect(str(id)))
+                raise(IncorrectValueType(str(id)))
         else:
             raise(IdNotFound(str(id)))
 
@@ -53,6 +74,15 @@ class Tables_():
         self.table_name = table_name
 
         self.columns = {}
+
+    def findByText(self,column:str,text:str):
+        x = None
+        if self.columns[column]:
+            id = self.columns[column].findByText(text)
+            x = self.get(id)
+        else:
+            raise(ColumnNotFound(column))
+        return x
 
     def ids_count(self) -> int:
         x = len(self.columns[next(iter(self.columns))].values)
@@ -127,11 +157,14 @@ class Tables_():
 
 class Database_():
     """Database Cursor and controller"""
-    def __init__(self,filename:str) -> None:
+    DB_TYPES = ['pydb', 'pyb', 'pyd','data','pydata','db']
+    def __init__(self,filename:str, fileType="pydb") -> None:
+        if not (fileType in self.DB_TYPES):
+            raise(FileTypeNotExist(fileType, self.DB_TYPES))
         self.CommonLoad = False
         if not filename in ['',' ', None]:
             self.CommonLoad = True
-            self.filename=  "./"+str(filename)+".pydb"
+            self.filename=  "./"+str(filename)+f".{fileType}"
         self.tables = {}
 
         self.created_at = datetime.now().strftime(GSTRFTIME)
@@ -139,6 +172,18 @@ class Database_():
 
         if self.CommonLoad:
             self.startup()
+
+    def _deleteDb(self):
+        if self.CommonLoad and self.filename:
+            os.remove(self.filename)
+
+    def findByText(self, table:str,column:str,text:str) -> dict:
+        x = None
+        if self.tables[table]:
+            x = self.tables[table].findByText(column,text)
+        else:
+            raise(TableNotFound(table))
+        return x
 
     def ids_count(self, table_name:str) -> int:
         """Get lenght of values stored in a table"""

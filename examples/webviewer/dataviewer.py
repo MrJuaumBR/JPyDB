@@ -19,7 +19,7 @@ except:
 """
 Will require webbrowser to open the URL
 
-Acess: http://localhost:5000
+Access: http://localhost:5000
 
 
 ::::: What is this? :::::
@@ -53,14 +53,20 @@ def main():
 @app.route('/load')
 def load():
     if 'p' in request.args:
-        datafile = request.args.get('p')
-        dbh = pyDatabase()
-        dbh.database.filename = datafile
-        dbh.database.startup() # restart
-        
-        db = dbh.db()
-        
-        return render_template('load.html',f=datafile,database=db)
+        try:
+            datafile = request.args.get('p')
+            dbh = pyDatabase()
+            dbh.database.filename = datafile
+            dbh.database.startup() # restart
+            
+            db = dbh.db()
+            
+            return render_template('load.html',f=datafile,database=db)
+        except Exception as err:
+            return f"""
+                <h1>Error Occurred</h1>
+                <p>{err}</p>
+            """
 
 if webBrowser:
     webopen('http://localhost:5000')

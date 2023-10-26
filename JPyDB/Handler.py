@@ -2,13 +2,17 @@ from ._defines import *
 
 class Handler_():
     """Handler, load content and others"""
-    def __init__(self,filename):
-        self.database:Database_ = Database_(filename)
+    def __init__(self,filename, fileType:str="pydb"):
+        self.database:Database_ = Database_(filename, fileType)
 
         self.encryption = ["b64","pickle"]
 
     def db(self) -> Database_:
         return self.database
+
+    def deleteDatabase(self):
+        """Delete Database"""
+        self.database._deleteDb()
 
     def save(self):
         self.database.save()

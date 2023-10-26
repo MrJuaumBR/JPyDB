@@ -22,7 +22,12 @@ class NotExpectedReturn(Exception):
 
 """Args Error..."""
 
-class ValueTypeIncorrect(Exception):
+class FileTypeNotExist(Exception):
+    def __init__(self, fileType:str, supported:list) -> None:
+        super().__init__(fileType, supported)
+        self.message = f'File Type: {fileType}, is not supported! Supported: {supported}'
+
+class IncorrectValueType(Exception):
     def __init__(self, value_id:int, value) -> None:
         super().__init__(value_id,value)
         self.message=f'Value {value_id} Type is incorrect! Value Type: {type(value)}'
@@ -36,3 +41,9 @@ class IncorrectSizeColumnsAndValues(Exception):
     def __init__(self, columns, values) -> None:
         super().__init__(columns, values)
         self.message = f'Size of Columns({columns}) need to be the same of values({values})'
+
+"""Class Errors"""
+class ClassDictGet(Exception):
+    def __init__(self, className:str) -> None:
+        super().__init__(className)
+        self.message = f'Class: {className}, cant get class data.'

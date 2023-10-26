@@ -2,7 +2,7 @@ from JPyDB import pyDatabase
 
 """
 Created 0.2
-Updated to 0.3
+Updated to 0.
 """
 
 dbh = pyDatabase('database') # Load Handler and Database
@@ -27,3 +27,6 @@ print(db.get('Users',0)) # Get all values from a Id
 
 # Save Values
 db.save()
+
+# Delete Database
+#dbh.deleteDatabase()

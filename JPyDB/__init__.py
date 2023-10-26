@@ -48,10 +48,10 @@ class Database(Database_):
 # Define Masked for Handler
 class pyDatabase(Handler_):
     """Main Startup"""
-    __VERSION__ = 0.6
-    def __init__(self, filename="") -> Handler_:
+    __VERSION__ = 0.7
+    def __init__(self, filename="", fileType:str="pydb") -> Handler_:
         """Initialize, filename='' to load after init"""
-        super().__init__(filename)
+        super().__init__(filename, fileType)
 
     def TESTPYPI(self):
         webbrowser.open("https://test.pypi.org/project/JPyDB/")

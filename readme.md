@@ -15,18 +15,18 @@ pip install -i https://test.pypi.org/simple/ JPyDB # Install from Test PyPi
 
 # Prompts
 ```shell
-# Local Update
-pip install . --upgrade
-
 # Pre Build by setup.py
 py setup.py build
 
 # Build Package
 py -m build
 
+# Local Update
+pip install . --upgrade
+
 # Send to TestPyPi
 python -m twine upload --repository-url https://test.pypi.org/legacy/ dist/*
-
+python -m twine upload --repository JPyDB dist/*
 ```
 
 # Our Lines
@@ -44,4 +44,4 @@ python -m twine upload --repository-url https://test.pypi.org/legacy/ dist/*
 
 [YouTube](https://www.youtube.com/channel/UClcAmcdF0OvAOEgiKr5NgYQ)
 
-[Test PyPi](https://test.pypi.org/project/JPyDB/0.4/)
+[Test PyPi](https://test.pypi.org/project/JPyDB/)
