@@ -26,12 +26,11 @@ pip install . --upgrade
 
 # Send to TestPyPi
 python -m twine upload --repository-url https://test.pypi.org/legacy/ dist/*
-python -m twine upload --repository JPyDB dist/*
+python -m twine upload --repository testpypi dist/*
 ```
 
 # Our Lines
 *Inspired in SQL*
-
 *Made using: Base64 and pickle*
 
 *Used Only Python to this*

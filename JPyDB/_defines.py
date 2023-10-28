@@ -153,6 +153,8 @@ class Tables_():
             c:Columns_ = self.columns[col]
             if str(id) in c.values.keys():
                 g[col] = c.get_value(id)
+
+        g['id'] = id
         return g
 
 class Database_():
