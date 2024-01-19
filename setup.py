@@ -15,6 +15,6 @@ By: MrJuaum/MrPotato
 
 # Setup using pyproject.toml
 setup(
-    long_description=DESCRIPTION_MD,
-    long_description_content_type='text/markdown'
+    long_description='Long description is giving error to build...',
+    long_description_content_type='text/markdown',
     )

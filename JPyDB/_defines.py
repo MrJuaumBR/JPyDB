@@ -7,6 +7,7 @@ GSTRFTIME = "%d/%m/%Y %H:%I:%S"
 from datetime import datetime
 
 from ._Exceptions import (TableNotFound, ColumnNotFound, IncorrectValueType, IncorrectSizeColumnsAndValues, NotExpectedReturn, IdNotFound, IncorrectSizeColumns, ClassDictGet, FileTypeNotExist)
+from .Extras import *
 
 class Columns_():
     def __init__(self,name:str, type:type, not_null:bool) -> None:
@@ -160,6 +161,7 @@ class Tables_():
 class Database_():
     """Database Cursor and controller"""
     DB_TYPES = ['pydb', 'pyb', 'pyd','data','pydata','db']
+    VERSION = '0.8.1'
     def __init__(self,filename:str, fileType="pydb") -> None:
         if not (fileType in self.DB_TYPES):
             raise(FileTypeNotExist(fileType, self.DB_TYPES))
@@ -174,6 +176,11 @@ class Database_():
 
         if self.CommonLoad:
             self.startup()
+
+    def get_db_size(self) -> float:
+        if os.path.exists(self.filename):
+            size = os.path.getsize(self.filename)
+            return humanbytes(size)
 
     def _deleteDb(self):
         if self.CommonLoad and self.filename:
@@ -207,6 +214,12 @@ class Database_():
             self.tables[table_name].delete_column(column_name)
         else:
             raise(TableNotFound(table_name))
+
+    def getAll(self) -> list[dict,]:
+        l = {}
+        for table in self.tables.keys():
+            l[table] = self.tables[table].get_all()
+        return l
 
     def get_all(self, table_name) -> list[dict,]:
         if table_name in self.tables:
@@ -296,7 +309,12 @@ class Database_():
             print(f'Table: {name}, Already in Database')
 
     def save(self):
-        """Save Values"""
+        """
+        Save Data
+
+        Create:
+            - Specified Datastore File
+        """
         self.updated_at = datetime.now().strftime(GSTRFTIME)
         open(self.filename,'wb').write(base64.b64encode(pickle.dumps(self)))
 

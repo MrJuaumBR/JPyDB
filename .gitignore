@@ -1,5 +1,15 @@
 # Git ignore for JPyDB
+# Data Stores
 *.pydb
+*.pyb
+*.pyd
+*.data
+*.pydata
+*.db
+
+# Output Sheet
+*.xls
+
 *.pypirc
 
 
